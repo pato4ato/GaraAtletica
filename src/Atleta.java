@@ -9,7 +9,7 @@ public class Atleta implements Runnable {
     int numero;
     String nome;
     double metri = 0;
-    final double LUNGHEZZAGARA = 50.0;
+    final double LUNGHEZZAGARA = 100.0;
 
 
     public Atleta(int pNumero, String pNome) {
