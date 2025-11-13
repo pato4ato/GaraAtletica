@@ -3,9 +3,9 @@ public class main {
         System.out.println("Gara Atletica");
 
 
-        new Atleta(67, "LeBrona");
-        new Atleta(68, "Janniko");
-        new Atleta(69, "Marcello");
+        new Atleta(32, "LeBrona");
+        new Atleta(69, "Janniko");
+        new Atleta(77, "Marcello");
 
 
         Giudice.inizio();
