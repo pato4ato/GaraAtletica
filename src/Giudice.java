@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 public class Giudice extends Thread {
     static int numero;
     static ArrayList<Atleta> Atleti = new ArrayList<>();
@@ -9,14 +8,12 @@ public class Giudice extends Thread {
 
     private Giudice() { }
 
-
     public static void aggiungimi(Atleta a) {
         Atleti.add(a);
     }
-
 public static void inizio(){
-    for (int i = 3; i > 0; i--) {
-        System.out.println("Inizio in " + i);
+    for (int i = 5; i > 0; i--) {
+        System.out.println("Inizio tra " + i);
         try { Thread.currentThread().sleep(1000); }
         catch (InterruptedException e) { System.err.println("Errore sleep"); }
     }
@@ -24,23 +21,16 @@ public static void inizio(){
         threadAtleti.add(new Thread(a));
         threadAtleti.getLast().start();
     }
-
 }
-
     public static void finito(Atleta a) {
         Podio.add(a);
         if (Podio.size() == Atleti.size())
             Giudice.fineGara();
     }
-
     public static void fineGara() {
-        System.out.println("Gara Terminata! Ecco il Podio:");
-        System.out.println("Primo in classifica: " + Podio.get(0).nome);
-        System.out.println("Secondo in classifica: " + Podio.get(1).nome);
-        System.out.println("Terzo in classifica: " + Podio.get(2).nome);
+        System.out.println("La gara è terminata, ecco il Podio:");
+        System.out.println("Il primo in classifica è " + Podio.get(0).nome);
+        System.out.println("Il secondo in classifica è " + Podio.get(1).nome);
+        System.out.println("Il terzo in classifica è " + Podio.get(2).nome);
     }
-
-
-
 }
-
