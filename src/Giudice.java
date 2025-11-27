@@ -12,9 +12,9 @@ public class Giudice extends Thread {
         Atleti.add(a);
     }
 public static void inizio(){
-    for (int i = 5; i > 0; i--) {
+    for (int i = 3; i > 0; i--) {
         System.out.println("Inizio tra " + i);
-        try { Thread.currentThread().sleep(1000); }
+        try { Thread.currentThread().sleep(900); }
         catch (InterruptedException e) { System.err.println("Errore sleep"); }
     }
     for (Atleta a : Atleti) {

@@ -7,5 +7,5 @@ public class main {
         new Atleta(69, "Marcello (J)");
 
         Giudice.inizio();
-}
+ }
 }
