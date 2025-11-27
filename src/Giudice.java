@@ -27,10 +27,11 @@ public static void inizio(){
         if (Podio.size() == Atleti.size())
             Giudice.fineGara();
     }
+
     public static void fineGara() {
-        System.out.println("La gara è terminata, ecco il Podio:");
-        System.out.println("Il primo in classifica è " + Podio.get(0).nome);
-        System.out.println("Il secondo in classifica è " + Podio.get(1).nome);
+        System.out.println("\nLa staffetta dei 400m è terminata, ecco il Podio:");
+        System.out.println("Il primo arrivato è " + Podio.get(0).nome);
+        System.out.println("Il secondo è " + Podio.get(1).nome);
         System.out.println("Il terzo in classifica è " + Podio.get(2).nome);
     }
 }
