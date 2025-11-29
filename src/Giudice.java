@@ -1,37 +1,67 @@
 import java.util.ArrayList;
 
-public class Giudice extends Thread {
-    static int numero;
-    static ArrayList<Atleta> Atleti = new ArrayList<>();
-    static ArrayList<Atleta> Podio = new ArrayList<>();
+public class Giudice {
+
+    // Lista di tutti gli atleti che partecipano alla gara
+    static ArrayList<Atleta> atleti = new ArrayList<>();
+
+    // Lista degli atleti nell'ordine d'arrivo
+    static ArrayList<Atleta> podio = new ArrayList<>();
+
+    // Thread associati agli atleti
     static ArrayList<Thread> threadAtleti = new ArrayList<>();
 
-    private Giudice() { }
-
+    // Metodo richiamato dagli atleti per registrarsi
     public static void aggiungimi(Atleta a) {
-        Atleti.add(a);
-    }
-public static void inizio(){
-    for (int i = 3; i > 0; i--) {
-        System.out.println("Inizio tra " + i);
-        try { Thread.currentThread().sleep(900); }
-        catch (InterruptedException e) { System.err.println("Errore sleep"); }
-    }
-    for (Atleta a : Atleti) {
-        threadAtleti.add(new Thread(a));
-        threadAtleti.getLast().start();
-    }
-}
-    public static void finito(Atleta a) {
-        Podio.add(a);
-        if (Podio.size() == Atleti.size())
-            Giudice.fineGara();
+        atleti.add(a);
     }
 
+    // Da il via alla gara
+    public static void via() {
+
+        // Countdown prima della partenza
+        for (int i = 3; i > 0; i--) {
+            System.out.println("Inizio tra " + i);
+            try { Thread.sleep(900); }
+            catch (InterruptedException e) { System.err.println("Errore sleep"); }
+        }
+
+        // Crea il Thread per ogni atleta e lo avvia
+        for (Atleta a : atleti) {
+            Thread t = new Thread(a);
+            threadAtleti.add(t);
+            t.start();
+        }
+    }
+
+    // Chiamato da ogni atleta quando arriva al traguardo
+    public static synchronized void finito(Atleta a) {
+
+        // Aggiunge nel podio in ordine di arrivo
+        podio.add(a);
+
+        // Se tutti gli atleti sono arrivati stampa il podio
+        if (podio.size() == atleti.size()) {
+            fineGara();
+        }
+    }
+
+    // Stampa il podio finale e lo salva su file
     public static void fineGara() {
-        System.out.println("\nLa staffetta dei 400m è terminata, ecco il Podio:");
-        System.out.println("Il primo arrivato è " + Podio.get(0).nome);
-        System.out.println("Il secondo è " + Podio.get(1).nome);
-        System.out.println("Il terzo in classifica è " + Podio.get(2).nome);
+
+        System.out.println("\nLa staffetta dei 400m è terminata! Podio finale:");
+
+        // Stampa classifica in console
+        for (int i = 0; i < podio.size(); i++) {
+            Atleta a = podio.get(i);
+            System.out.printf("\n%d - %s  [%d] ",
+                    i + 1, a.getNomeAtleta(), a.getIdCorrente());
+        }
+
+        // Scrive su file il podio usando il GestoreFile
+        gestoreFile GF = new gestoreFile();
+        GF.stampaPodio(podio, "podio.txt");
+
+        System.out.println("Podio salvato in podio.txt");
     }
 }

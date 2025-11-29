@@ -1,11 +1,15 @@
 public class main {
     public static void main(String[] args) {
+
+        // Titolo della gara.
         System.out.println("Gara Atletica");
 
-        new Atleta(13,"Hames (LB)");
-        new Atleta(36,"Janniko (S)");
+        // Creazione dei partecipanti alla gara, gni atleta si registra dal Giudice.
+        new Atleta(13, "Hames (LB)");
+        new Atleta(36, "Janniko (S)");
         new Atleta(69, "Marcello (J)");
 
-        Giudice.inizio();
- }
+        // Avvio della gara.
+        Giudice.via();
+    }
 }
