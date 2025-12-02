@@ -56,6 +56,9 @@ public class Giudice {
             Atleta a = podio.get(i);
             System.out.printf("\n%d - %s  [%d] ",
                     i + 1, a.getNomeAtleta(), a.getIdCorrente());
+            if(i == 2){
+                break;
+            }
         }
 
         // Scrive su file il podio usando il GestoreFile
