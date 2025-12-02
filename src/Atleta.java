@@ -1,53 +1,70 @@
 import java.util.Random;
 
-// Classe che rappresenta un atleta che corre in un thread separato
+/** @pato4ato
+ * @Version 6.0
+ * Rappresenta un atleta che partecipa a una gara di corsa.
+ * Ogni atleta viene eseguito all'interno di un thread indipendente
+ * e simula l'avanzamento casuale fino al completamento della gara.
+ */
 public class Atleta implements Runnable {
 
-    // Numero dell’atleta
+    /** Numero identificativo dell'atleta. */
     private int numero;
 
-    // Nome dell’atleta
+    /** Nome dell'atleta. */
     private String nome;
 
-    // Metri percorsi durante la gara
+    /** Metri percorsi finora. */
     private double metri = 0;
 
-    // Lunghezza totale della gara
-    private final double LUNGHEZZAGARA = 400.0;
+    /** Lunghezza totale della gara in metri. */
+    private final double LUNGHEZZAGARA = 100.0;
 
-    // Costruttore
+    /**
+     * Costruttore dell'atleta.
+     *
+     * @param pNumero numero identificativo dell'atleta
+     * @param pNome nome dell'atleta
+     */
     public Atleta(int pNumero, String pNome) {
         this.numero = pNumero;
         this.nome = pNome;
         Giudice.aggiungimi(this);
     }
 
-    // Metodo eseguito dal thread dell’atleta
+    /**
+     * Metodo eseguito dal thread dell'atleta.
+     * Simula la corsa tramite incrementi casuali di distanza.
+     */
     @Override
     public void run() {
 
-        // Generatore casuale per simulare i metri percorsi ogni secondo
         Random rnd = new Random();
 
-        // Salva il tempo di partenza
-        long start = System.currentTimeMillis();
-
-        // Ciclo finché non supera i 400 metri
         while (metri <= LUNGHEZZAGARA) {
 
-            // Aumenta di un valore casuale tra 0 e 50
-            metri += rnd.nextDouble(50);
+            metri += rnd.nextDouble(15);
 
             System.out.println(nome + " Metri Percorsi: " + metri);
 
-            // Pausa di 1 secondo per simulare la corsa reale
             try { Thread.sleep(1000); }
-            catch (InterruptedException e) { System.err.println("Errore sleep"); }
+            catch (InterruptedException e) {
+                System.err.println("Errore sleep");
+            }
         }
-        // Comunica al Giudice che è arrivato
+
         Giudice.finito(this);
     }
-    // GETTER richiesti dal GestoreFile
+
+    /**
+     * Restituisce il numero identificativo dell'atleta.
+     * @return numero atleta
+     */
     public int getIdCorrente() { return numero; }
+
+    /**
+     * Restituisce il nome dell'atleta.
+     * @return nome atleta
+     */
     public String getNomeAtleta() { return nome; }
 }

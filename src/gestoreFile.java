@@ -6,9 +6,19 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+/** @pato4ato
+ * @Version 6.0
+ * Classe che gestisce operazioni di input/output su file,
+ * come la lettura di elenchi e la scrittura del podio finale.
+ */
 class gestoreFile {
 
-    // Legge una lista di nomi dal file
+    /**
+     * Legge una lista di nomi da un file di testo.
+     *
+     * @param nomeFile percorso del file da leggere
+     * @return lista di stringhe contenenti i nomi trovati
+     */
     public List<String> leggiAtleti(String nomeFile) {
 
         List<String> nomi = new ArrayList<>();
@@ -17,11 +27,9 @@ class gestoreFile {
 
             String riga;
 
-            // Legge riga per riga
             while ((riga = br.readLine()) != null) {
                 riga = riga.trim();
 
-                // Salta righe vuote
                 if (!riga.isEmpty()) {
                     nomi.add(riga);
                 }
@@ -31,26 +39,33 @@ class gestoreFile {
             System.err.println("Errore lettura file: " + e.getMessage());
         }
 
-        return nomi; // Può essere vuota
+        return nomi;
     }
 
-
-    // Scrive il podio sul file indicato
+    /**
+     * Scrive su file i primi tre atleti del podio e il vincitore.
+     *
+     * @param podio lista ordinata degli atleti arrivati
+     * @param nomeFile percorso del file dove salvare il podio
+     */
     public void stampaPodio(List<Atleta> podio, String nomeFile) {
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(nomeFile))) {
 
-            int posizione = 1;
+            int limite = Math.min(3, podio.size());
 
-            // Scrive ogni atleta in ordine
-            for (Atleta c : podio) {
+            for (int i = 0; i < limite; i++) {
+                Atleta c = podio.get(i);
                 pw.printf("\n%d - %s - %d",
-                        posizione++,                   // Posizione in classifica
-                        c.getNomeAtleta(),             // Nome
-                        c.getIdCorrente());             // ID atleta
+                        i + 1,
+                        c.getNomeAtleta(),
+                        c.getIdCorrente());
             }
 
-            System.out.println("\n\nPodio scritto nel file: " + nomeFile);
+            pw.println("\n--------------------------");
+            pw.println("Vincitore: " + podio.get(0).getNomeAtleta());
+
+            System.out.println("\nPodio scritto nel file: " + nomeFile);
 
         } catch (IOException e) {
             System.err.println("\nErrore scrittura podio: " + e.getMessage());

@@ -1,32 +1,43 @@
 import java.util.ArrayList;
 
+/** @pato4ato
+ * @Version 6.0
+ * Gestisce la gara, registra gli atleti, avvia i thread e
+ * determina l'ordine di arrivo dei partecipanti.
+ */
 public class Giudice {
 
-    // Lista di tutti gli atleti che partecipano alla gara
+    /** Lista di tutti gli atleti registrati. */
     static ArrayList<Atleta> atleti = new ArrayList<>();
 
-    // Lista degli atleti nell'ordine d'arrivo
+    /** Lista degli atleti in ordine di arrivo. */
     static ArrayList<Atleta> podio = new ArrayList<>();
 
-    // Thread associati agli atleti
+    /** Lista dei thread associati agli atleti. */
     static ArrayList<Thread> threadAtleti = new ArrayList<>();
 
-    // Metodo richiamato dagli atleti per registrarsi
+    /**
+     * Registra un atleta prima della partenza.
+     * @param a atleta da aggiungere
+     */
     public static void aggiungimi(Atleta a) {
         atleti.add(a);
     }
 
-    // Da il via alla gara
+    /**
+     * Avvia la gara, effettua un conto alla rovescia,
+     * crea e avvia i thread per ogni atleta.
+     */
     public static void via() {
-
-        // Countdown prima della partenza
+        System.out.println("\n");
         for (int i = 3; i > 0; i--) {
             System.out.println("Inizio tra " + i);
             try { Thread.sleep(900); }
-            catch (InterruptedException e) { System.err.println("Errore sleep"); }
+            catch (InterruptedException e) {
+                System.err.println("Errore sleep");
+            }
         }
-
-        // Crea il Thread per ogni atleta e lo avvia
+        System.out.println("\n");
         for (Atleta a : atleti) {
             Thread t = new Thread(a);
             threadAtleti.add(t);
@@ -34,37 +45,47 @@ public class Giudice {
         }
     }
 
-    // Chiamato da ogni atleta quando arriva al traguardo
+    /**
+     * Metodo richiamato da un atleta quando conclude la gara.
+     * Viene inserito nell'ordine di arrivo.
+     *
+     * @param a atleta che ha terminato
+     */
     public static synchronized void finito(Atleta a) {
 
-        // Aggiunge nel podio in ordine di arrivo
         podio.add(a);
 
-        // Se tutti gli atleti sono arrivati stampa il podio
         if (podio.size() == atleti.size()) {
             fineGara();
         }
     }
 
-    // Stampa il podio finale e lo salva su file
+    /**
+     * Elabora la classifica finale,
+     * stampa i primi tre posti in console,
+     * indica il vincitore e salva i risultati su file.
+     */
     public static void fineGara() {
 
-        System.out.println("\nLa staffetta dei 400m è terminata! Podio finale:");
+        System.out.println("\nLo sprint dei 100m è terminato! Podio finale:");
 
-        // Stampa classifica in console
-        for (int i = 0; i < podio.size(); i++) {
+        int limite = Math.min(3, podio.size());
+
+        System.out.println("\nVincitore: " + podio.get(0).getNomeAtleta());
+
+        System.out.println("\n--------------------------");
+
+        for (int i = 0; i < limite; i++) {
             Atleta a = podio.get(i);
-            System.out.printf("\n%d - %s  [%d] ",
+            System.out.printf("\n%d - %s  [%d]",
                     i + 1, a.getNomeAtleta(), a.getIdCorrente());
-            if(i == 2){
-                break;
-            }
         }
 
-        // Scrive su file il podio usando il GestoreFile
+        System.out.println("\n--------------------------");
+
         gestoreFile GF = new gestoreFile();
         GF.stampaPodio(podio, "podio.txt");
 
-        System.out.println("Podio salvato in podio.txt");
+        System.out.println("\nPodio salvato in podio.txt");
     }
 }
