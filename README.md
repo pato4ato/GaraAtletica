@@ -1,4 +1,4 @@
-<h1>Simulazione Gara Atletica 400m</h1>
+<h1>Simulazione Gara Atletica 100m</h1>
 <br>
 Il progetto rappresenta una simulazione di una gara di atletica sui 400 metri, dove ogni atleta viene gestito come un thread indipendente. Gli atleti avanzano in modo casuale e il Giudice registra l’ordine di arrivo. Al termine della gara vengono mostrati i primi tre classificati e il nome del vincitore su una riga separata. Inoltre, il sistema salva i risultati in un file dedicato.
 
