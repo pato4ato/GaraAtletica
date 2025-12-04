@@ -1,91 +1,86 @@
 import java.util.ArrayList;
 
-/** @pato4ato
- * @Version 6.0
- * Gestisce la gara, registra gli atleti, avvia i thread e
- * determina l'ordine di arrivo dei partecipanti.
+/**  @pato4ato
+ * @Version 7.0
+ * Gestisce la gara: registra gli atleti, avvia i thread e crea il podio.
  */
 public class Giudice {
 
-    /** Lista di tutti gli atleti registrati. */
-    static ArrayList<Atleta> atleti = new ArrayList<>();
+    /** Elenco degli atleti partecipanti. */
+    private static ArrayList<Atleta> atleti = new ArrayList<>();
 
-    /** Lista degli atleti in ordine di arrivo. */
-    static ArrayList<Atleta> podio = new ArrayList<>();
+    /** Ordine di arrivo (riempito dai thread). */
+    private static ArrayList<Atleta> podio = new ArrayList<>();
 
-    /** Lista dei thread associati agli atleti. */
-    static ArrayList<Thread> threadAtleti = new ArrayList<>();
+    /** Lista dei thread degli atleti. */
+    private static ArrayList<Thread> threads = new ArrayList<>();
 
     /**
-     * Registra un atleta prima della partenza.
+     * Registra un atleta nella gara.
+     *
      * @param a atleta da aggiungere
      */
-    public static void aggiungimi(Atleta a) {
+    public static void aggiungiAtleta(Atleta a) {
         atleti.add(a);
     }
 
     /**
-     * Avvia la gara, effettua un conto alla rovescia,
-     * crea e avvia i thread per ogni atleta.
+     * Avvia la gara con un conto alla rovescia
+     * e crea un thread per ogni atleta.
      */
-    public static void via() {
-        System.out.println("\n");
+    public static void startGara() {
+
+        System.out.println("\n    PARTENZA TRA    ");
+
         for (int i = 3; i > 0; i--) {
-            System.out.println("Inizio tra " + i);
+            System.out.println(i);
             try { Thread.sleep(900); }
-            catch (InterruptedException e) {
-                System.err.println("Errore sleep");
-            }
+            catch (InterruptedException e) { }
         }
-        System.out.println("\n");
+
+        System.out.println("\nVIA!\n");
+
         for (Atleta a : atleti) {
             Thread t = new Thread(a);
-            threadAtleti.add(t);
+            threads.add(t);
             t.start();
         }
     }
 
     /**
-     * Metodo richiamato da un atleta quando conclude la gara.
-     * Viene inserito nell'ordine di arrivo.
+     * Viene chiamato da un atleta quando termina la corsa.
+     * Sincronizzato per evitare conflitti.
      *
-     * @param a atleta che ha terminato
+     * @param a atleta arrivato
      */
-    public static synchronized void finito(Atleta a) {
+    public static synchronized void arrivo(Atleta a) {
 
         podio.add(a);
 
+        // Quando arrivano tutti → stampa risultati
         if (podio.size() == atleti.size()) {
-            fineGara();
+            stampaRisultati();
         }
     }
 
     /**
-     * Elabora la classifica finale,
-     * stampa i primi tre posti in console,
-     * indica il vincitore e salva i risultati su file.
+     * Stampa il podio finale e salva i risultati su file.
      */
-    public static void fineGara() {
+    private static void stampaRisultati() {
 
-        System.out.println("\nLo sprint dei 100m è terminato! Podio finale:");
+        System.out.println("\n   RISULTATI FINALI  ");
 
         int limite = Math.min(3, podio.size());
 
-        System.out.println("\nVincitore: " + podio.get(0).getNomeAtleta());
+        System.out.println("\nVincitore: " + podio.get(0).getNome());
 
-        System.out.println("\n--------------------------");
-
+        System.out.println("\n    PODIO    ");
         for (int i = 0; i < limite; i++) {
             Atleta a = podio.get(i);
-            System.out.printf("\n%d - %s  [%d]",
-                    i + 1, a.getNomeAtleta(), a.getIdCorrente());
+            System.out.printf("%d) %s  [N° %d]\n", i + 1, a.getNome(), a.getNumero());
         }
 
-        System.out.println("\n--------------------------");
-
-        gestoreFile GF = new gestoreFile();
-        GF.stampaPodio(podio, "podio.txt");
-
-        System.out.println("\nPodio salvato in podio.txt");
+        // Salva su file
+        new gestoreFile().scriviPodio(podio, "podio.txt");
     }
 }

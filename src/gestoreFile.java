@@ -1,27 +1,23 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /** @pato4ato
- * @Version 6.0
- * Classe che gestisce operazioni di input/output su file,
- * come la lettura di elenchi e la scrittura del podio finale.
+ * @Version 7.0
+ * Gestisce la lettura da file e la scrittura del podio finale.
  */
-class gestoreFile {
+public class gestoreFile {
 
     /**
-     * Legge una lista di nomi da un file di testo.
+     * Legge i nomi degli atleti da un file.
+     * Ogni riga contiene solo il nome dell’atleta.
      *
-     * @param nomeFile percorso del file da leggere
-     * @return lista di stringhe contenenti i nomi trovati
+     * @param nomeFile percorso del file
+     * @return lista di nomi letti
      */
-    public List<String> leggiAtleti(String nomeFile) {
+    public List<String> leggiNomi(String nomeFile) {
 
-        List<String> nomi = new ArrayList<>();
+        List<String> lista = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(nomeFile))) {
 
@@ -29,9 +25,8 @@ class gestoreFile {
 
             while ((riga = br.readLine()) != null) {
                 riga = riga.trim();
-
                 if (!riga.isEmpty()) {
-                    nomi.add(riga);
+                    lista.add(riga);
                 }
             }
 
@@ -39,36 +34,32 @@ class gestoreFile {
             System.err.println("Errore lettura file: " + e.getMessage());
         }
 
-        return nomi;
+        return lista;
     }
 
     /**
-     * Scrive su file i primi tre atleti del podio e il vincitore.
+     * Scrive i primi tre classificati su un file.
      *
-     * @param podio lista ordinata degli atleti arrivati
-     * @param nomeFile percorso del file dove salvare il podio
+     * @param podio lista degli atleti in ordine di arrivo
+     * @param nomeFile percorso del file di output
      */
-    public void stampaPodio(List<Atleta> podio, String nomeFile) {
+    public void scriviPodio(List<Atleta> podio, String nomeFile) {
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(nomeFile))) {
 
             int limite = Math.min(3, podio.size());
 
+            pw.println("    PODIO    ");
+
             for (int i = 0; i < limite; i++) {
-                Atleta c = podio.get(i);
-                pw.printf("\n%d - %s - %d",
-                        i + 1,
-                        c.getNomeAtleta(),
-                        c.getIdCorrente());
+                Atleta a = podio.get(i);
+                pw.printf("%d) %s  [N° %d]\n", i + 1, a.getNome(), a.getNumero());
             }
 
-            pw.println("\n--------------------------");
-            pw.println("Vincitore: " + podio.get(0).getNomeAtleta());
-
-            System.out.println("\nPodio scritto nel file: " + nomeFile);
+            pw.println("\nVincitore: " + podio.get(0).getNome());
 
         } catch (IOException e) {
-            System.err.println("\nErrore scrittura podio: " + e.getMessage());
+            System.err.println("Errore scrittura file: " + e.getMessage());
         }
     }
 }
